@@ -1,0 +1,44 @@
+{
+  "name": "my-boiler-plate",
+  "version": "1.0.0",
+  "description": "NodeJS basic boiler plate",
+  "main": "index.js",
+  "scripts": {
+    "start": "SET \"NODE_ENV=development\" && node server/server.js",
+    "build": "SET \"NODE_ENV=production\" && node server/server.js",
+    "test": "SET \"NODE_ENV=test\" && mocha --timeout 10000 server/**/*.test.js",
+    "test-watch": "nodemon --exec npm test"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "api"
+  ],
+  "author": "Avtar Singh Chohan",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^5.1.0",
+    "mongoose": "^7.0.1",
+    "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "eslint": "^8.36.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "expect": "^29.5.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.21",
+    "prettier": "^2.8.4",
+    "supertest": "^6.3.3"
+  }
+}
