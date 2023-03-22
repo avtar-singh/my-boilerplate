@@ -19,7 +19,7 @@ describe("Check if User is valid", () => {
   it("should return user if authenticate", (done) => {
     const token = users[0].tokens[0].token;
     request(app)
-      .get("/users/me")
+      .get("/api/v1/user/home")
       .set("x-auth", token)
       .set("Connection", "keep-alive")
       .expect((res) => {
@@ -32,10 +32,10 @@ describe("Check if User is valid", () => {
 
   it("should return 401 if not authenticate", (done) => {
     request(app)
-      .get("/users/me")
-      .set("Accept", "application/json")
-      .set("Content-Type", "application/json")
-      .set("x-auth", "fdssdffdsfds")
+      .get('/api/v1/user/home')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('x-auth', 'fdssdffdsfds')
       .end((err, res) => {
         expect(res.statusCode).to.equal(401);
         done();
@@ -51,26 +51,26 @@ describe("Check if User is valid", () => {
 describe("Adding new user", () => {
   it("should create a user", (done) => {
     request(app)
-      .post("/user")
-      .send({ email: "john.doe3@test3.com", password: "test@123" })
-      .set("Accept", "application/json")
-      .set("Content-Type", "application/json")
+      .post('/api/v1/user/register')
+      .send({ email: 'john.doe3@test3.com', password: 'test@123' })
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
       .end((err, res) => {
         if (err) {
           return done(err);
         }
         expect(res.statusCode).to.equal(200);
-        expect(res.body.email).to.equal("john.doe3@test3.com");
+        expect(res.body.email).to.equal('john.doe3@test3.com');
         done();
       });
   });
 
   it("should return validation error if request invalid", (done) => {
     request(app)
-      .post("/user")
-      .send({ email: "john.dotest3.com", password: "tes21ds@t" })
-      .set("Accept", "application/json")
-      .set("Content-Type", "application/json")
+      .post('/api/v1/user/register')
+      .send({ email: 'john.dotest3.com', password: 'tes21ds@t' })
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
       .end((err, res) => {
         if (err) {
           return done(err);
@@ -82,10 +82,10 @@ describe("Adding new user", () => {
 
   it("should not create user if email already in use", (done) => {
     request(app)
-      .post("/user")
-      .send({ email: process.env.SEED_EMAIL, password: "test@dssd12" })
-      .set("Accept", "application/json")
-      .set("Content-Type", "application/json")
+      .post('/api/v1/user/register')
+      .send({ email: process.env.SEED_EMAIL, password: 'test@dssd12' })
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
       .end((err, res) => {
         if (err) {
           return done(err);
@@ -100,14 +100,14 @@ describe("Adding new user", () => {
 describe("User login", () => {
   it("should login if valid user", (done) => {
     request(app)
-      .post("/users/login")
+      .post('/api/v1/user/login')
       .send({
         email: users[1].email,
         password: users[1].password,
       })
       .expect(200)
       .expect((res) => {
-        expect(res.headers["x-auth"]).to.be.a("string");
+        expect(res.headers['x-auth']).to.be.a('string');
       })
       .end((err, res) => {
         if (err) {
@@ -117,8 +117,8 @@ describe("User login", () => {
         User.findById(users[1]._id)
           .then((user) => {
             expect(user.tokens[1]).to.include({
-              access: "auth",
-              token: res.headers["x-auth"],
+              access: 'auth',
+              token: res.headers['x-auth'],
             });
             done();
           })
@@ -128,9 +128,9 @@ describe("User login", () => {
 
   it("should not login if invalid user", (done) => {
     request(app)
-      .post("/users/login")
+      .post('/api/v1/user/login')
       .send({
-        email: "wrong.email@mail.com",
+        email: 'wrong.email@mail.com',
         password: users[1].password,
       })
       .expect(400)
@@ -138,8 +138,8 @@ describe("User login", () => {
         if (err) {
           return done(err);
         }
-        expect(res.body).to.be.an("object").that.is.empty;
-        expect(res.headers["x-auth"]).to.be.undefined;
+        expect(res.body).to.be.an('object').that.is.empty;
+        expect(res.headers['x-auth']).to.be.undefined;
         done();
       });
   });
@@ -150,9 +150,9 @@ describe("User logout", () => {
   it("should remove token on successful logout", (done) => {
     const token = users[0].tokens[0].token;
     request(app)
-      .delete("/users/me/token")
-      .set("x-auth", token)
-      .set("Connection", "keep-alive")
+      .delete('/api/v1/user/logout')
+      .set('x-auth', token)
+      .set('Connection', 'keep-alive')
       .end((err, res) => {
         if (err) {
           return done(err);
